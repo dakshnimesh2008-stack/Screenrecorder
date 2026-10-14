@@ -3,7 +3,8 @@ name: Build UltraLite Recorder
 on:
 workflow_dispatch:
 push:
-branches: [main]
+branches:
+- main
 
 permissions:
 contents: read
@@ -11,9 +12,10 @@ contents: read
 jobs:
 build:
 runs-on: ubuntu-latest
+
 steps:
-- name: Checkout repository
-uses: actions/checkout@v4
+  - name: Checkout repository
+    uses: actions/checkout@v4
 
   - name: Set up Java
     uses: actions/setup-java@v4
@@ -26,14 +28,11 @@ uses: actions/checkout@v4
     with:
       gradle-version: '8.9'
 
-  - name: Extract Android project
-    run: |
-      unzip -o UltraLiteRecorder-GitHub-Project.zip -d UltraLiteRecorder
+  - name: Extract project ZIP
+    run: unzip -o UltraLiteRecorder-GitHub-Project.zip -d UltraLiteRecorder
 
   - name: Build APK
-    run: |
-      cd UltraLiteRecorder
-      gradle --no-daemon assembleDebug
+    run: gradle --no-daemon -p UltraLiteRecorder assembleDebug
 
   - name: Upload APK
     uses: actions/upload-artifact@v4
